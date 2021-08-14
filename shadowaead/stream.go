@@ -51,7 +51,7 @@ func (w *writer) ReadFrom(r io.Reader) (n int64, err error) {
 			n += int64(nr)
 			buf = buf[:2+w.Overhead()+nr+w.Overhead()]
 			payloadBuf = payloadBuf[:nr]
-			buf[0], buf[1] = byte(nr>>8), byte(nr) // big-endian payload size
+			buf[0], buf[1] = byte((nr>>8)&0xFF), byte(nr&0xFF) // big-endian payload size
 			w.Seal(buf[:0], w.nonce, buf[:2], nil)
 			increment(w.nonce)
 
