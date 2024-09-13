@@ -1,6 +1,7 @@
 NAME=shadowsocks2
 BINDIR=bin
 GOBUILD=CGO_ENABLED=0 go build -ldflags '-w -s -buildid='
+GOINSTALL=CGO_ENABLED=0 go install -ldflags '-w -s -buildid='
 # The -w and -s flags reduce binary sizes by excluding unnecessary symbols and debug info
 # The -buildid= flag makes builds reproducible
 
@@ -71,3 +72,13 @@ upload: releases
 	curl -H "Authorization: token $(GITHUB_TOKEN)" -H "Content-Type: application/gzip" --data-binary @$(BINDIR)/$(NAME)-macos-arm64.gz  "$(GITHUB_UPLOAD_URL)?name=$(NAME)-macos-arm64.gz"
 	curl -H "Authorization: token $(GITHUB_TOKEN)" -H "Content-Type: application/zip"  --data-binary @$(BINDIR)/$(NAME)-win64.zip "$(GITHUB_UPLOAD_URL)?name=$(NAME)-win64.zip"
 	curl -H "Authorization: token $(GITHUB_TOKEN)" -H "Content-Type: application/zip"  --data-binary @$(BINDIR)/$(NAME)-win32.zip "$(GITHUB_UPLOAD_URL)?name=$(NAME)-win32.zip"
+
+.PHONY build:
+build:
+	$(GOBUILD) -o $(BINDIR)/$(NAME)
+
+.PHONY install:
+install:
+	$(GOINSTALL)
+
+
